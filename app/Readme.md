@@ -1,5 +1,32 @@
 \# Project: Android Gallery App with Live Server Upload — Cybersecurity Demonstration
 
+## Implemented app
+
+The current implementation is a consent-based gallery demo built with Kotlin, Jetpack Compose, Retrofit, OkHttp, Coil, coroutines, StateFlow, a repository layer, and a ViewModel.
+
+- On first launch it requests Android image access and displays local images in a thumbnail grid.
+- **Nothing uploads automatically.** The participant chooses images, reviews the count, and confirms the upload in a dialog.
+- The system Photo Picker supports selecting up to 50 images. Supported types are JPEG, PNG, and WebP.
+- Registration uses `POST /api/demo/register`; the returned device token is stored with `EncryptedSharedPreferences` backed by Android Keystore.
+- Uploads use `POST /api/images/upload` with `X-Device-Token`, `device_id`, and the selected image multipart field.
+- Optional **Automatic demo mode** requires an explicit opt-in, uses at most four selected images, runs through WorkManager, reports progress through a foreground notification, and can be stopped from the app.
+
+## Run against the FastAPI backend
+
+1. Start the backend on the computer's LAN interface and port 8000.
+2. In the app, open the gear icon and set a URL such as `http://192.168.1.25:8000/` using the computer's actual LAN IP.
+3. Keep the phone and computer on the same Wi-Fi network. Allow image access, select images, then press **Upload selected** and confirm.
+
+Do not use `0.0.0.0` as the Android URL. `localhost` points to the Android device itself; for an Android emulator, use `10.0.2.2` when the backend runs on the host computer. The manifest enables cleartext HTTP because this is a local classroom demo; use HTTPS for a real deployment.
+
+Build an installable debug APK with:
+
+```text
+gradlew.bat :app:assembleDebug
+```
+
+The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
+
 
 
 Act as a senior Android developer. Build a complete, polished Android application for a college cybersecurity assignment. The app should function as a photo gallery, display existing images stored on the phone, and upload user-authorized images to a separate Python FastAPI backend.
